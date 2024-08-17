@@ -1,0 +1,14 @@
+# Ignore artifacts:
+coverage
+dist
+prisma
+
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+
+
+package.json
+package-lock.json
+README.md

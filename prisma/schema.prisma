@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Loan {
+  id                Int        @id @default(autoincrement())
+  borrowerId        Int
+  principalAmount   Float
+  rate              Float
+  roi               Float
+  agreementLink     String
+  state             LoanState  @default(PROPOSED)
+  approvedAt        DateTime?
+  approvedBy        Int? // Employee ID of the field validator
+  approvalProof     String? // URL to the picture proof
+  investedAmount    Float      @default(0)
+  investors         Investor[]
+  disbursedAt       DateTime?
+  disbursedBy       Int? // Employee ID of the officer who disbursed
+  disbursementProof String? // URL to signed agreement letter
+}
+
+model Investor {
+  id         Int   @id @default(autoincrement())
+  loanId     Int
+  loan       Loan  @relation(fields: [loanId], references: [id])
+  amount     Float
+  investorId Int // ID of the investor
+}
+
+enum LoanState {
+  PROPOSED
+  APPROVED
+  INVESTED
+  DISBURSED
+}
